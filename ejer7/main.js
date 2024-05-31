@@ -26,18 +26,32 @@ function crearTarjetasUsuarios(users) {
   })
 }
 
-async function verTareas(id){
-  let peticion = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
-  let tarea = await peticion.json()
-  console.log(tarea)
+function salirDeTareas(){
+  const tareasModal = document.getElementById('tareas-modal')
+  tareasModal.classList.add('disabled')
+}
 
-  let userP = document.getElementById(`usuario-${id}`)
-  userP.innerText = tarea.title
-  if(tarea.completed){
-    userP.style.color = 'lightgreen'
-  }else{
-    userP.style.color = 'red'
-  }
+async function verTareas(id){
+  const tareasModal = document.getElementById('tareas-modal')
+  const listaDeTareas = document.getElementById('tareas-lista')
+  listaDeTareas.innerHTML = ''
+  let peticion = await fetch(`https://jsonplaceholder.typicode.com/todos?userId=${id}`)
+  let tareas = await peticion.json()
+  tareas.forEach(tarea => {
+    let tareaHTML = `
+      <div class="tarea-element">
+        <p>ID: ${tarea.id}</p>
+        <p>Tarea: ${tarea.title}</p>
+        <p>${tarea.completed ? 'Completada ✅': 'Incompleta ❌'}</p>
+      </div>
+    `
+
+    listaDeTareas.innerHTML += tareaHTML
+  })
+
+  tareasModal.classList.remove('disabled')
+
+
 }
 
 
